@@ -22,11 +22,14 @@ export function parseRules(text: string): Rule[] {
   return { tag: line.slice(0, split).trim(), folder: safeFolder(line.slice(split + 4)) };
  });
 }
+function folderError(value: string): string | undefined {
+ try { safeFolder(value); return undefined; } catch (e) { return e instanceof Error ? e.message : String(e); }
+}
 export class ImportSettingTab extends PluginSettingTab {
  constructor(app: ConstructorParameters<typeof PluginSettingTab>[0], public plugin: StandardNotesImportPlugin) { super(app, plugin); }
  getSettingDefinitions(): SettingDefinitionItem[] {
   return [
-   { name: 'Destination folder', desc: 'Default folder for new notes.', control: { type: 'text', key: 'destination', defaultValue: 'Standard Notes' } },
+   { name: 'Destination folder', desc: 'Default folder for new notes.', control: { type: 'text', key: 'destination', defaultValue: 'Standard Notes', validate: (v: string) => folderError(v) } },
    ...(this.plugin.pro ? sponsorsSettingItems(this.plugin.pro, PRO_UI) : []),
    { name: 'Saved tag rules (Pro)', desc: 'Use one source tag => folder rule per line. Source tag names are case sensitive. The first matching rule selects the folder.', render: (setting) => {
     let text = this.plugin.settings.rules.map((r) => `${r.tag} => ${r.folder}`).join('\n');

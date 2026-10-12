@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App } from 'obsidian-test-mocks/obsidian';
 import StandardNotesImportPlugin, { existingNote, renderNote } from '../src/main';
 import { parseBackup, safeFolder, safeTitle, tagValue } from '../src/importer';
-import { normalizeSettings, parseRules } from '../src/settings';
+import { ImportSettingTab, normalizeSettings, parseRules } from '../src/settings';
 import { bindPro, resetPro, SPONSORS } from '../src/pro';
 import manifest from '../manifest.json';
 
@@ -144,6 +144,16 @@ describe('input boundaries', () => {
   expect(new TextEncoder().encode(title).length).toBeLessThanOrEqual(128);
   expect([...title].length).toBeLessThanOrEqual(80);
   expect(title).not.toMatch(/[\ud800-\udbff]$/);
+ });
+ it('validates the destination setting inline before a save', async () => {
+  const { app, plugin } = make();
+  const save = vi.spyOn(plugin, 'saveSettings').mockResolvedValue();
+  const item = new ImportSettingTab(app as never, plugin).getSettingDefinitions().find((d) => 'control' in d && d.control?.key === 'destination');
+  const validate = item && 'control' in item ? item.control?.validate as ((v: string) => unknown) | undefined : undefined;
+  expect(validate).toBeTypeOf('function');
+  for (const bad of ['', 'Imported/', '../outside', '.hidden']) expect(await validate!(bad)).toMatch(/relative folder/);
+  expect(await validate!('Imported/Work')).toBeFalsy();
+  expect(save).not.toHaveBeenCalled();
  });
  it('repairs saved settings and parses rules', () => {
   expect(normalizeSettings({ destination: '../outside', rules: [{ tag: 'work', folder: '../outside' }] })).toEqual(normalizeSettings(null));
