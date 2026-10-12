@@ -7,6 +7,13 @@
     "after": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); return 'ok'; })()"
   },
   {
+    "feature": "native-text-backup",
+    "caption": "Select the native decrypted text backup without a rename.",
+    "note": "Welcome.md",
+    "eval": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); const path = 'Standard Notes Backup and Import File.txt'; if (!app.vault.getAbstractFileByPath(path)) await app.vault.create(path, await app.vault.read(app.vault.getAbstractFileByPath('Standard Notes Import/' + path))); p.settings.destination = 'Imported'; p.openImport(); const picker = document.querySelector('select[data-field=backup]'); picker.value = path; picker.dispatchEvent(new Event('change')); return picker.value; })()",
+    "after": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); const f = app.vault.getAbstractFileByPath('Standard Notes Backup and Import File.txt'); if (f) await app.vault.delete(f); return 'ok'; })()"
+  },
+  {
     "feature": "tag-joins",
     "caption": "Supported notes keep tags from both reference directions.",
     "note": "Welcome.md",

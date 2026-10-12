@@ -13,10 +13,10 @@ export class ImportModal extends Modal {
  onOpen(): void {
   this.setTitle('Import a decrypted backup');
   this.contentEl.addClass('standard-notes-import');
-  this.contentEl.createEl('p', { text: 'Select a JSON backup in this vault. Encrypted notes and unsupported editors are skipped. Existing notes keep their text.' });
-  const files = this.app.vault.getFiles().filter((f) => f.extension.toLowerCase() === 'json').sort((a, b) => a.path.localeCompare(b.path));
-  this.path = files[0]?.path ?? '';
-  if (!files.length) this.contentEl.createEl('p', { text: 'Put a decrypted .json backup in your vault, then open this command again.' });
+  this.contentEl.createEl('p', { text: 'Select a decrypted .json or .txt backup in this vault. Encrypted notes and unsupported editors are skipped. Existing notes keep their text.' });
+  const files = this.app.vault.getFiles().filter((f) => ['json', 'txt'].includes(f.extension.toLowerCase())).sort((a, b) => a.path.localeCompare(b.path));
+  this.path = (files.find((f) => f.name === 'Standard Notes Backup and Import File.txt') ?? files.find((f) => f.extension.toLowerCase() === 'json') ?? files[0])?.path ?? '';
+  if (!files.length) this.contentEl.createEl('p', { text: 'Put a decrypted .json or .txt backup in your vault, then open this command again.' });
   new Setting(this.contentEl).setName('Backup file').addDropdown((d) => {
    d.addOptions(Object.fromEntries(files.map((f) => [f.path, f.path]))).setValue(this.path).onChange((v) => { this.path = v; });
    d.selectEl.dataset.field = 'backup';

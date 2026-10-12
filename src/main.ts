@@ -90,9 +90,9 @@ export default class StandardNotesImportPlugin extends Plugin {
  }
  async readBackup(path: string): Promise<unknown> {
   const file = this.app.vault.getAbstractFileByPath(normalizePath(path));
-  if (!(file instanceof TFile) || file.extension.toLowerCase() !== 'json') throw new Error('Select a JSON backup in this vault.');
+  if (!(file instanceof TFile) || !['json', 'txt'].includes(file.extension.toLowerCase())) throw new Error('Select a .json or .txt backup in this vault.');
   const text = await this.app.vault.read(file);
-  try { return JSON.parse(text) as unknown; } catch { throw new Error('The backup is not valid JSON.'); }
+  try { return JSON.parse(text.replace(/^\uFEFF/, '')) as unknown; } catch { throw new Error('The backup is not valid JSON.'); }
  }
  async inspectBackup(input: unknown, folder: string, preview = false): Promise<ImportPlan> {
   this.requireLoaded();

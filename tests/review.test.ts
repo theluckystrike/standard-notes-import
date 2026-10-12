@@ -14,6 +14,33 @@ const make = (files: Record<string, string> = {}) => {
 afterEach(() => { resetPro(); vi.restoreAllMocks(); });
 
 describe('review regressions', () => {
+ it.each([
+  [{ 'A notes/todo.txt': 'Text', 'backup.json': '{}' }, 'backup.json'],
+  [{ 'A notes/todo.txt': 'Text', 'backup.json': '{}', 'B/Standard Notes Backup and Import File.txt': '{}' }, 'B/Standard Notes Backup and Import File.txt'],
+  [{ 'A notes/todo.txt': 'Text', 'b.txt': 'Text' }, 'A notes/todo.txt'],
+ ])('selects a likely backup first in the dialog %#', (files, selected) => {
+  const { plugin } = make(files);
+  const modal = new ImportModal(plugin);
+  modal.onOpen();
+  expect(modal.contentEl.querySelector<HTMLSelectElement>('select[data-field="backup"]')!.value).toBe(selected);
+  modal.onClose();
+ });
+ it('lists json and txt backups in the dialog and imports the selected txt file', async () => {
+  const input = JSON.stringify({ items: [note()] });
+  const { app, plugin } = make({ 'backup.json': input, 'native.TXT': input, 'note.md': 'Text', 'archive.zip': 'Zip' });
+  const modal = new ImportModal(plugin);
+  modal.onOpen();
+  const picker = modal.contentEl.querySelector<HTMLSelectElement>('select[data-field="backup"]')!;
+  expect([...picker.options].map((o) => o.value)).toEqual(['backup.json', 'native.TXT']);
+  picker.value = 'native.TXT';
+  picker.dispatchEvent(new Event('change'));
+  const report = vi.spyOn(plugin, 'showReport').mockImplementation(() => undefined);
+  modal.contentEl.querySelector<HTMLButtonElement>('button[data-action="import"]')!.click();
+  await vi.waitFor(() => expect(report).toHaveBeenCalled());
+  expect(app.vault.getAbstractFileByPath('Standard Notes/Hello--n1.md')).not.toBeNull();
+  expect(await app.vault.read(app.vault.getAbstractFileByPath('native.TXT') as never)).toBe(input);
+  modal.onClose();
+ });
  it.each(['.private', '..private'])('keeps the imported title %s visible in the vault', (title) => {
   const plan = planImport({ items: [note('n1', title)] });
   expect(plan.notes[0]?.path.split('/').at(-1)).not.toMatch(/^\./);

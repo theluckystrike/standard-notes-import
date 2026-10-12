@@ -13,14 +13,14 @@ function backup() {
 }
 
 describe('Standard Notes import behavior', () => {
- it('imports through the command dialog and keeps the backup', async () => {
+ it('imports a native txt backup through the command dialog and keeps the backup', async () => {
   await browser.executeObsidian(async ({ app }) => {
-   await app.vault.create('ui-backup.json', JSON.stringify({ items: [{ uuid: 'ui-note', content_type: 'Note', content: { title: 'From dialog', text: 'Hello from the dialog', references: [] } }] }));
+   await app.vault.create('Standard Notes Backup and Import File.txt', JSON.stringify({ items: [{ uuid: 'ui-note', content_type: 'Note', content: { title: 'From dialog', text: 'Hello from the dialog', references: [] } }] }));
   });
   await browser.executeObsidianCommand('standard-notes-import:import-backup');
   const picker = browser.$('select[data-field="backup"]');
   await picker.waitForDisplayed();
-  await picker.selectByAttribute('value', 'ui-backup.json');
+  await picker.selectByAttribute('value', 'Standard Notes Backup and Import File.txt');
   await browser.$('input[data-field="destination"]').setValue('Dialog import');
   await browser.$('button[data-action="import"]').click();
   await browser.waitUntil(async () => browser.executeObsidian(({ app }) => !!app.vault.getAbstractFileByPath('Dialog import/From dialog--ui-note.md')));
@@ -28,7 +28,7 @@ describe('Standard Notes import behavior', () => {
   expect(await browser.$('.sni-summary').getText()).toContain('Created: 1 notes');
   const result = await browser.executeObsidian(async ({ app }) => {
    const file = app.vault.getFiles().find((f) => f.path === 'Dialog import/From dialog--ui-note.md')!;
-   return { body: await app.vault.read(file), backup: !!app.vault.getAbstractFileByPath('ui-backup.json') };
+   return { body: await app.vault.read(file), backup: !!app.vault.getAbstractFileByPath('Standard Notes Backup and Import File.txt') };
   });
   expect(result.body).toContain('source_uuid: ui-note');
   expect(result.body).toContain('Hello from the dialog');

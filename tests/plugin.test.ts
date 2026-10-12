@@ -26,6 +26,33 @@ describe('vault import', () => {
   expect(existingNote(file.path, text)?.source).toEqual(parseBackup(backup).notes[0]);
   expect(await app.vault.read(app.vault.getAbstractFileByPath('backup.json') as never)).toBe(json);
  });
+ it.each(['Standard Notes Backup and Import File.txt', 'backup.TXT', 'backup.JSON'])('imports a native backup %s without a rename or Pro', async (path) => {
+  const json = '\uFEFF' + JSON.stringify({ ...backup, version: '004' });
+  const { app, plugin } = make({ [path]: json });
+  const input = await plugin.readBackup(path);
+  const check = await plugin.inspectBackup(input, 'Imported');
+  expect(check.notes).toHaveLength(1);
+  expect(app.vault.getFiles()).toHaveLength(1);
+  const result = await plugin.importBackup(input, 'Imported');
+  expect(result.notes).toHaveLength(1);
+  const file = app.vault.getAbstractFileByPath(result.notes[0]!.path)!;
+  expect(existingNote(file.path, await app.vault.read(file as never))?.source).toEqual(parseBackup(backup).notes[0]);
+  expect(await app.vault.read(app.vault.getAbstractFileByPath(path) as never)).toBe(json);
+  expect((await plugin.importBackup(input, 'Imported')).notes).toHaveLength(0);
+ });
+ it.each(['ordinary text', '{', JSON.stringify({ title: 'An individual note' }), JSON.stringify({ items: [], version: '005' })])('rejects an unsupported txt backup without writes %s', async (text) => {
+  const { app, plugin } = make({ 'backup.txt': text });
+  await expect((async () => plugin.importBackup(await plugin.readBackup('backup.txt'), 'Imported'))()).rejects.toThrow();
+  expect(app.vault.getFiles()).toHaveLength(1);
+  expect(await app.vault.read(app.vault.getAbstractFileByPath('backup.txt') as never)).toBe(text);
+ });
+ it('reports encrypted records in a txt backup without creating notes', async () => {
+  const { app, plugin } = make({ 'encrypted.txt': JSON.stringify({ version: '004', items: [{ uuid: 'secret', content_type: 'Note', content: '004:ciphertext' }] }) });
+  const result = await plugin.importBackup(await plugin.readBackup('encrypted.txt'), 'Imported');
+  expect(result.notes).toHaveLength(0);
+  expect(result.issues).toEqual([{ uuid: 'secret', reason: 'Encrypted content: select a decrypted backup' }]);
+  expect(app.vault.getFiles()).toHaveLength(1);
+ });
  it('repeat import keeps edits in an existing note', async () => {
   const original = renderNote({ uuid: 'n1', title: 'Hello', text: 'My vault edit', tags: [] });
   const { app, plugin } = make({ 'Old.md': original });
@@ -60,10 +87,10 @@ describe('vault import', () => {
   await expect(plugin.importBackup(backup, 'Imported')).rejects.toThrow('already in progress');
   await first;
  });
- it('rejects non JSON files and invalid JSON', async () => {
+ it('rejects other file types and invalid JSON', async () => {
   const { plugin } = make({ 'bad.json': '{', 'note.md': 'Text' });
   await expect(plugin.readBackup('bad.json')).rejects.toThrow('not valid JSON');
-  await expect(plugin.readBackup('note.md')).rejects.toThrow('Select a JSON');
+  await expect(plugin.readBackup('note.md')).rejects.toThrow('Select a .json or .txt');
  });
 });
 
