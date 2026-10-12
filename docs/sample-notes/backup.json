@@ -1,0 +1,88 @@
+{
+  "version": "004",
+  "items": [
+    {
+      "uuid": "sn-trip",
+      "content_type": "Note",
+      "created_at": "2020-04-15T09:30:00.000Z",
+      "updated_at": "2026-09-28T14:20:00.000Z",
+      "content": {
+        "title": "Trip plan / 日本",
+        "text": "# Trip plan\n\nKeep the train route and the places we want to visit.\n\n- Book the morning train.\n- Visit the small bookshop.\n- Save one afternoon for the garden.",
+        "references": [
+          {
+            "uuid": "tag-travel",
+            "content_type": "Tag"
+          }
+        ]
+      }
+    },
+    {
+      "uuid": "sn-work",
+      "content_type": "Note",
+      "created_at": "2022-01-10T08:00:00Z",
+      "updated_at": "2026-10-01T10:00:00Z",
+      "content": {
+        "title": "Project notes",
+        "text": "# Project notes\n\nThe next draft needs a clear import report.\n\n## Next steps\n\n- Check source dates.\n- Keep the original title.\n- Review duplicate notes.",
+        "editorIdentifier": "org.standardnotes.simple-markdown-editor",
+        "references": [
+          {
+            "uuid": "tag-work",
+            "content_type": "Tag"
+          }
+        ]
+      }
+    },
+    {
+      "uuid": "sn-idea",
+      "content_type": "Note",
+      "content": {
+        "title": "A small idea",
+        "text": "A local importer can make a one-time move easier. Keep the core free.",
+        "references": []
+      }
+    },
+    {
+      "uuid": "tag-travel",
+      "content_type": "Tag",
+      "content": {
+        "title": "travel",
+        "references": [
+          {
+            "uuid": "sn-trip",
+            "content_type": "Note"
+          }
+        ]
+      }
+    },
+    {
+      "uuid": "tag-work",
+      "content_type": "Tag",
+      "content": {
+        "title": "work",
+        "references": [
+          {
+            "uuid": "sn-work",
+            "content_type": "Note"
+          }
+        ]
+      }
+    },
+    {
+      "uuid": "sn-secret",
+      "content_type": "Note",
+      "content": "004:encrypted-sample"
+    },
+    {
+      "uuid": "sn-rich",
+      "content_type": "Note",
+      "content": {
+        "title": "Rich editor record",
+        "text": "Unsupported sample",
+        "editorIdentifier": "org.standardnotes.super",
+        "references": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+.standard-notes-import .sni-report {
+ max-height: 48vh;
+ overflow: auto;
+}
+
+.standard-notes-import .sni-row {
+ padding: var(--size-4-2);
+ margin-bottom: var(--size-4-2);
+ border: 1px solid var(--background-modifier-border);
+ border-radius: var(--radius-s);
+ overflow-wrap: anywhere;
+}
+
+.standard-notes-import .sni-row small {
+ color: var(--text-muted);
+}
+
+.standard-notes-import .sni-issue,
+.standard-notes-import .sni-status {
+ color: var(--text-warning);
+ overflow-wrap: anywhere;
+}
+
+.standard-notes-import .sni-change pre {
+ white-space: pre-wrap;
+ overflow-wrap: anywhere;
+}
+
+.standard-notes-import .sni-comparison {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: var(--size-4-3);
+}
+
+.standard-notes-import .sni-column {
+ min-width: 0;
+ overflow-wrap: anywhere;
+}
+
+.standard-notes-import .sni-column small {
+ color: var(--text-muted);
+}
+
+@media (width <= 650px) {
+ .standard-notes-import .sni-comparison {
+  grid-template-columns: 1fr;
+ }
+}

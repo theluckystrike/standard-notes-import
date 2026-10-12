@@ -1,0 +1,1316 @@
+{
+ "slug": "standard-notes-import",
+ "module": "standard-notes-import/src/importer",
+ "function": "planImport",
+ "cases": [
+  {
+   "name": "Plain legacy note creates Markdown with its UUID",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Version 004 note preserves its text",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "# Title\n\nHello",
+        "references": []
+       }
+      }
+     ],
+     "version": "004"
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "# Title\n\nHello",
+      "tags": [],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Tag to Note reference joins work",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      },
+      {
+       "uuid": "t1",
+       "content_type": "Tag",
+       "content": {
+        "title": "work",
+        "references": [
+         {
+          "uuid": "n1",
+          "content_type": "Note"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [
+       "work"
+      ],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Note to Tag reference joins work",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": [
+         {
+          "uuid": "t1",
+          "content_type": "Tag"
+         }
+        ]
+       }
+      },
+      {
+       "uuid": "t1",
+       "content_type": "Tag",
+       "content": {
+        "title": "work",
+        "references": []
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [
+       "work"
+      ],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Both reference directions write the tag once",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": [
+         {
+          "uuid": "t1",
+          "content_type": "Tag"
+         },
+         {
+          "uuid": "t1",
+          "content_type": "Tag"
+         }
+        ]
+       }
+      },
+      {
+       "uuid": "t1",
+       "content_type": "Tag",
+       "content": {
+        "title": "work",
+        "references": [
+         {
+          "uuid": "n1",
+          "content_type": "Note"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [
+       "work"
+      ],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Encrypted content is skipped",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": "004:ciphertext"
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Encrypted content: select a decrypted backup"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "A rich editor reports its identifier",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": [],
+        "editorIdentifier": "org.standardnotes.super"
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Unsupported editor: org.standardnotes.super"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Unknown editor is skipped",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": [],
+        "editorIdentifier": "future-editor"
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Unsupported editor: future-editor"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Duplicate backup UUID makes one note",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      },
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Changed",
+        "references": []
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Duplicate UUID in backup"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Vault UUID leaves an existing note unchanged",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    },
+    "Standard Notes",
+    [
+     {
+      "uuid": "n1",
+      "path": "Old.md"
+     }
+    ]
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Duplicate UUID in vault: Old.md"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Equal titles use distinct UUID suffixes",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      },
+      {
+       "uuid": "n2",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [],
+      "path": "Standard Notes/Hello--n1.md"
+     },
+     {
+      "uuid": "n2",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [],
+      "path": "Standard Notes/Hello--n2.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Empty title has a safe UUID path",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "",
+      "text": "Hello",
+      "tags": [],
+      "path": "Standard Notes/Untitled--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Unicode and path separators preserve the original title",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Café/日本\\工作",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Café/日本\\工作",
+      "text": "Hello",
+      "tags": [],
+      "path": "Standard Notes/Café-日本-工作--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Source dates stay as source strings",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       },
+       "created_at": "2020-02-03T04:05:06.000Z",
+       "updated_at": "2025-11-12T13:14:15Z"
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [],
+      "createdAt": "2020-02-03T04:05:06.000Z",
+      "updatedAt": "2025-11-12T13:14:15Z",
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Absent dates stay absent",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Markdown basic editor is supported",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "**Hello**",
+        "references": [],
+        "editorIdentifier": "org.standardnotes.simple-markdown-editor"
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "**Hello**",
+      "tags": [],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Plain text editor is supported",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": [],
+        "editorIdentifier": "com.standardnotes.plain-text"
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "A path conflict creates no note",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    },
+    "Standard Notes",
+    [],
+    [
+     "Standard Notes/Hello--n1.md"
+    ]
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Path conflict: Standard Notes/Hello--n1.md"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Case insensitive occupied paths report conflicts",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    },
+    "Standard Notes",
+    [],
+    [
+     "standard notes/hello--N1.MD"
+    ]
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Path conflict: Standard Notes/Hello--n1.md"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Windows device titles get a safe prefix",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "CON",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "CON",
+      "text": "Hello",
+      "tags": [],
+      "path": "Standard Notes/Note-CON--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "A missing tag reports the reference",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": [
+         {
+          "uuid": "missing",
+          "content_type": "Tag"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Missing tag: missing"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Unknown item types are reported",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "f1",
+       "content_type": "File",
+       "content": {}
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "f1",
+      "reason": "Unsupported item type: File"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Invalid note text is rejected",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "x",
+        "text": 42
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Invalid note shape"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Malformed references are rejected",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": [
+         {
+          "uuid": 42,
+          "content_type": "Tag"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Invalid note shape"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Deleted notes are skipped",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       },
+       "deleted": true
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Deleted source note"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Tag rule selects a destination",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      },
+      {
+       "uuid": "t1",
+       "content_type": "Tag",
+       "content": {
+        "title": "work",
+        "references": [
+         {
+          "uuid": "n1",
+          "content_type": "Note"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    "Standard Notes",
+    [],
+    [],
+    [
+     {
+      "tag": "work",
+      "folder": "Imported/Work"
+     }
+    ]
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [
+       "work"
+      ],
+      "path": "Imported/Work/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "First matching rule wins",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      },
+      {
+       "uuid": "t1",
+       "content_type": "Tag",
+       "content": {
+        "title": "work",
+        "references": [
+         {
+          "uuid": "n1",
+          "content_type": "Note"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    "Standard Notes",
+    [],
+    [],
+    [
+     {
+      "tag": "work",
+      "folder": "First"
+     },
+     {
+      "tag": "work",
+      "folder": "Second"
+     }
+    ]
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [
+       "work"
+      ],
+      "path": "First/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "Repeat preview shows changed records without new writes",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    },
+    "Standard Notes",
+    [
+     {
+      "uuid": "n1",
+      "path": "Old.md",
+      "source": {
+       "uuid": "n1",
+       "title": "Hello",
+       "text": "Old",
+       "tags": []
+      }
+     }
+    ],
+    [],
+    [],
+    true
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Duplicate UUID in vault: Old.md"
+     }
+    ],
+    "changed": [
+     {
+      "uuid": "n1",
+      "path": "Old.md",
+      "before": {
+       "uuid": "n1",
+       "title": "Hello",
+       "text": "Old",
+       "tags": []
+      },
+      "after": {
+       "uuid": "n1",
+       "title": "Hello",
+       "text": "Hello",
+       "tags": []
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "Repeat preview omits unchanged records",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    },
+    "Standard Notes",
+    [
+     {
+      "uuid": "n1",
+      "path": "Old.md",
+      "source": {
+       "uuid": "n1",
+       "title": "Hello",
+       "text": "Hello",
+       "tags": []
+      }
+     }
+    ],
+    [],
+    [],
+    true
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Duplicate UUID in vault: Old.md"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Free repeat plan omits changed record details",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    },
+    "Standard Notes",
+    [
+     {
+      "uuid": "n1",
+      "path": "Old.md",
+      "source": {
+       "uuid": "n1",
+       "title": "Hello",
+       "text": "Old",
+       "tags": []
+      }
+     }
+    ]
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Duplicate UUID in vault: Old.md"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "Two tag names are sorted and preserved",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": [
+         {
+          "uuid": "t1",
+          "content_type": "Tag"
+         },
+         {
+          "uuid": "t2",
+          "content_type": "Tag"
+         }
+        ]
+       }
+      },
+      {
+       "uuid": "t1",
+       "content_type": "Tag",
+       "content": {
+        "title": "Work Projects",
+        "references": []
+       }
+      },
+      {
+       "uuid": "t2",
+       "content_type": "Tag",
+       "content": {
+        "title": "日本",
+        "references": []
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [
+       "Work Projects",
+       "日本"
+      ],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  },
+  {
+   "name": "An invalid UUID is rejected",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "../escape",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "../escape",
+      "reason": "Invalid note UUID"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "A malformed tag does not block a valid note",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "Hello",
+        "references": []
+       }
+      },
+      {
+       "uuid": "t1",
+       "content_type": "Tag",
+       "content": "cipher"
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "Hello",
+      "tags": [],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [
+     {
+      "uuid": "t1",
+      "reason": "Invalid tag shape"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "A super note without an editor identifier is skipped",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Rich",
+        "text": "Serialized document",
+        "noteType": "super"
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [],
+    "issues": [
+     {
+      "uuid": "n1",
+      "reason": "Unsupported note type: super"
+     }
+    ],
+    "changed": []
+   }
+  },
+  {
+   "name": "A markdown note type keeps Markdown text",
+   "args": [
+    {
+     "items": [
+      {
+       "uuid": "n1",
+       "content_type": "Note",
+       "content": {
+        "title": "Hello",
+        "text": "**Hello**",
+        "noteType": "markdown"
+       }
+      }
+     ]
+    }
+   ],
+   "expected": {
+    "notes": [
+     {
+      "uuid": "n1",
+      "title": "Hello",
+      "text": "**Hello**",
+      "tags": [],
+      "path": "Standard Notes/Hello--n1.md"
+     }
+    ],
+    "issues": [],
+    "changed": []
+   }
+  }
+ ]
+}

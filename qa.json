@@ -1,0 +1,69 @@
+[
+  {
+    "feature": "choose-backup",
+    "caption": "Select a local decrypted backup and destination folder.",
+    "note": "Welcome.md",
+    "eval": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); p.settings.destination = 'Standard Notes Import/Imported'; p.openImport(); return 'ok'; })()",
+    "after": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); return 'ok'; })()"
+  },
+  {
+    "feature": "tag-joins",
+    "caption": "Supported notes keep tags from both reference directions.",
+    "note": "Welcome.md",
+    "eval": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); for (const path of ['Trip plan - 日本--sn-trip.md', 'Project notes--sn-work.md', 'A small idea--sn-idea.md']) { const f = app.vault.getAbstractFileByPath('Standard Notes Import/Imported/' + path); if (f) await app.vault.delete(f); } const input = await p.readBackup('Standard Notes Import/backup.json'); p.showReport(await p.inspectBackup(input, 'Standard Notes Import/Imported')); return 'ok'; })()",
+    "after": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); return 'ok'; })()"
+  },
+  {
+    "feature": "source-properties",
+    "caption": "The imported note keeps its original title, UUID, tags and source dates.",
+    "note": "Welcome.md",
+    "eval": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); const input = await p.readBackup('Standard Notes Import/backup.json'); await p.importBackup(input, 'Standard Notes Import/Imported'); const f = app.vault.getAbstractFileByPath('Standard Notes Import/Imported/Trip plan - 日本--sn-trip.md'); const leaf = app.workspace.getLeaf(false); await leaf.openFile(f); await leaf.setViewState({ type: 'markdown', state: { file: f.path, mode: 'source' } }); return 'ok'; })()"
+  },
+  {
+    "feature": "skip-report",
+    "caption": "The report shows repeats, encrypted content and an unsupported editor.",
+    "note": "Welcome.md",
+    "eval": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); const input = await p.readBackup('Standard Notes Import/backup.json'); p.showReport(await p.importBackup(input, 'Standard Notes Import/Imported'), true); return 'ok'; })()",
+    "after": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); return 'ok'; })()"
+  },
+  {
+    "feature": "tag-rules",
+    "caption": "Pro saves folder rules by original source tag.",
+    "note": "Welcome.md",
+    "eval": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.opts.http = async () => ({ status: 200, json: { data: { viewer: { login: 'demo-reader' }, user: { sponsorshipForViewerAsSponsor: { isActive: true, isOneTimePayment: false, tier: { name: '$5 a month', monthlyPriceInCents: 500 } } } } } }); app.secretStorage.setSecret('standard-notes-import-github-token', 'gho_' + '0'.repeat(36)); await p.pro.refreshNow(); await p.saveRules([{ tag: 'work', folder: 'Imported/Work' }, { tag: 'travel', folder: 'Imported/Travel' }]); app.setting.open(); app.setting.openTabById('standard-notes-import'); return 'ok'; })()",
+    "after": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); return 'ok'; })()"
+  },
+  {
+    "feature": "repeat-preview",
+    "caption": "Pro shows a changed source record without writing it.",
+    "note": "Welcome.md",
+    "eval": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.opts.http = async () => ({ status: 200, json: { data: { viewer: { login: 'demo-reader' }, user: { sponsorshipForViewerAsSponsor: { isActive: true, isOneTimePayment: false, tier: { name: '$5 a month', monthlyPriceInCents: 500 } } } } } }); app.secretStorage.setSecret('standard-notes-import-github-token', 'gho_' + '0'.repeat(36)); await p.pro.refreshNow(); const input = await p.readBackup('Standard Notes Import/backup.json'); input.items[0].content.text = '# Trip plan\\n\\nThe new backup adds a visit to the art museum.\\n\\n- Book the morning train.\\n- Visit the art museum.'; p.showReport(await p.inspectBackup(input, 'Standard Notes Import/Imported', true)); document.querySelector('.sni-change').open = true; return 'ok'; })()",
+    "after": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); return 'ok'; })()"
+  },
+  {
+    "feature": "import-flow",
+    "caption": "Select a backup, check records and inspect the imported note.",
+    "frames": [
+      {
+        "note": "Welcome.md",
+        "eval": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); for (const path of ['Trip plan - 日本--sn-trip.md', 'Project notes--sn-work.md', 'A small idea--sn-idea.md']) { const f = app.vault.getAbstractFileByPath('Standard Notes Import/Imported/' + path); if (f) await app.vault.delete(f); } p.settings.destination = 'Standard Notes Import/Imported'; p.openImport(); return 'ok'; })()",
+        "hold": 1600
+      },
+      {
+        "note": "Welcome.md",
+        "eval": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); const input = await p.readBackup('Standard Notes Import/backup.json'); p.showReport(await p.importBackup(input, 'Standard Notes Import/Imported'), true); return 'ok'; })()",
+        "hold": 1800
+      },
+      {
+        "note": "Welcome.md",
+        "eval": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); const input = await p.readBackup('Standard Notes Import/backup.json'); const f = app.vault.getAbstractFileByPath('Standard Notes Import/Imported/Trip plan - 日本--sn-trip.md'); const leaf = app.workspace.getLeaf(false); await leaf.openFile(f); await leaf.setViewState({ type: 'markdown', state: { file: f.path, mode: 'source' } }); return 'ok'; })()",
+        "hold": 1800
+      },
+      {
+        "note": "Welcome.md",
+        "eval": "(async () => { const p = app.plugins.plugins['standard-notes-import']; for (const m of [...p.modals]) m.close(); app.setting.close(); p.pro.signOut(); return 'ok'; })()",
+        "hold": 1000
+      }
+    ]
+  }
+]
