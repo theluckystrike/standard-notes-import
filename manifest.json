@@ -1,7 +1,7 @@
 {
 	"id": "standard-notes-import",
 	"name": "Standard Notes Import",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"minAppVersion": "1.13.4",
 	"description": "Import decrypted Standard Notes backups with tags and dates.",
 	"author": "Michael Lip",
