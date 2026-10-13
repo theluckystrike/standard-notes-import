@@ -46,7 +46,7 @@ export default class StandardNotesImportPlugin extends Plugin {
   const saved: unknown = await this.loadData();
   if (this.unloaded) return;
   this.settings = normalizeSettings(saved);
-  const pro = createGitHubSponsors(this.app, this.manifest.id, SPONSORS);
+  const pro = createGitHubSponsors(this.app, this.manifest.id, SPONSORS, this);
   pro.init();
   this.pro = pro;
   bindPro(pro);
