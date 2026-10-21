@@ -107,3 +107,7 @@ After a successful check, Pro can work offline for up to 14 days. Sign out or a 
 ## Support
 
 Use the published repository's issue tracker for bug reports. Include the Obsidian version, backup version and report message. If you share a sample, remove private text and use invented UUIDs and titles. Do not include tokens, encryption keys or a complete private backup. The publisher is theluckystrike at notemods.com.
+
+## Community
+
+Questions, bugs or plugin ideas? Talk to me and other Obsidian users in [Zovo Chat](https://t.me/+k2MM-BIc7SQ5OWM0) on Telegram. It has a topic for these plugins. You can also open an issue here.
