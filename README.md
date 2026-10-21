@@ -18,9 +18,9 @@ The supported input is a JSON object with an `items` array. Version 1 reads a ba
 
 ### Import the native text backup
 
-If Standard Notes gives you a decrypted ZIP archive, extract it first. Copy `Standard Notes Backup and Import File.txt` into the vault and choose it in the import dialog. You do not need to rename it to `.json`. The file must contain a JSON backup with an `items` array. Uppercase extensions and a leading byte order mark are accepted.
+If Standard Notes gives you a decrypted ZIP archive, extract it first. Copy `Standard Notes Backup and Import File.txt` into the vault and choose it in the import dialog. You do not need to rename it to `.json`. Uppercase extensions and a leading byte order mark are accepted.
 
-This feature is free. Both extensions use the same checks and source properties. Individual text notes and ZIP files cannot be imported. Encrypted records are skipped.
+This feature is free. Both extensions use the same checks and source properties. Individual text notes and ZIP files cannot be imported.
 
 <img src="https://raw.githubusercontent.com/theluckystrike/standard-notes-import/HEAD/docs/native-text-backup.png" alt="The import dialog selects the original Standard Notes text backup" width="720">
 
@@ -36,15 +36,15 @@ A Tag can reference a Note, or a Note can reference a Tag. The importer joins th
 
 Properties include `source_uuid`, `source_title` and `source_tags`. When the backup supplies `created_at` or `updated_at` strings, the importer writes `source_created_at` and `source_updated_at`. These values are source strings. The plugin does not replace them with the import time or set file system dates.
 
-Paths use a safe title and the full source UUID, such as `Trip plan--n1.md`. Path separators and unsafe filename characters become hyphens. Empty titles use `Untitled`. The original title, including Unicode, stays in the properties. Two notes with the same title can have distinct UUID paths. Long filenames are shortened. A title that starts with a dot gets a `Note-` prefix. Non-breaking spaces become regular spaces in paths.
+Paths use a safe title and the full source UUID, such as `Trip plan--n1.md`. Path separators and unsafe filename characters become hyphens. Empty titles use `Untitled`. The original title, including Unicode, stays in the properties. Long filenames are shortened. A title that starts with a dot gets a `Note-` prefix. Non-breaking spaces become regular spaces in paths.
 
 <img src="https://raw.githubusercontent.com/theluckystrike/standard-notes-import/HEAD/docs/source-properties.png" alt="An imported note shows source UUID, original title, tags and dates" width="720">
 
 ### Read skipped records and conflicts
 
-The report lists unsupported records, encrypted content, malformed shapes, missing tag references, duplicate UUIDs and path conflicts. A duplicate within the backup produces at most one note. A UUID already in the properties of a vault Markdown file is skipped, even if that file was renamed or moved. Existing text stays in place.
+The report lists unsupported records, encrypted content, malformed shapes, missing tag references, duplicate UUIDs and path conflicts. A duplicate within the backup produces at most one note. A UUID already in the properties of a vault Markdown file is skipped, even if that file was renamed or moved.
 
-An occupied output path is reported. The importer does not choose a numbered replacement path. If a write fails, the report names the path and the error. Notes created before that failure stay in the vault. The report stays open until you close it.
+The importer does not choose a numbered replacement path. If a write fails, the report names the path and the error. Notes created before that failure stay in the vault. The report stays open until you close it.
 
 <img src="https://raw.githubusercontent.com/theluckystrike/standard-notes-import/HEAD/docs/skip-report.png" alt="The report lists encrypted content, an unsupported editor and duplicate UUIDs" width="720">
 
@@ -58,7 +58,7 @@ In the plugin settings, enter one rule per line, such as `work => Imported/Work`
 
 Select "Preview changes (pro)" in the import dialog to compare source records with notes that have matching UUIDs. Expand a changed record to read the existing vault record and the new backup record. The comparison includes text, original title, source tags and source date strings. A local body edit can appear as a change.
 
-The preview writes no notes. Version 1 does not merge changed text, replace existing notes or move them to a new rule folder. A repeat import creates notes for new source UUIDs and skips existing ones. Use the preview for manual review.
+The preview writes no notes. Version 1 does not merge changed text, replace existing notes or move them to a new rule folder. Use the preview for manual review.
 
 <img src="https://raw.githubusercontent.com/theluckystrike/standard-notes-import/HEAD/docs/repeat-preview.png" alt="A changed record is expanded to show the old and new source text" width="720">
 
@@ -78,9 +78,11 @@ An import adds files. To undo it, remove the files created for that import. Use 
 
 ## Settings
 
+After a minor or major update, this plugin opens one What's new tab in the background. The tab and settings card suggest other NoteMods plugins and Zovo Chat and link to notemods.com for feedback ([privacy](https://notemods.com/privacy/)). The tab sends no data. Turn the tab off in Settings.
+
 "Destination folder" sets the default for the next import dialog. The dialog can use another folder for one import. Use a relative folder path inside the vault. Empty paths, parent traversal, hidden folder names and unsafe folder names are rejected.
 
-The Pro section has the sponsorship controls, account state and saved tag rules. A saved rule does not change the location of a note already imported.
+The Pro section has the sponsorship controls, account state and saved tag rules.
 
 ## FAQ
 
@@ -90,7 +92,7 @@ No Linux app run, physical mobile device, live payment, live GitHub sign-in, enc
 
 ### Why does a repeat import skip my changed note?
 
-The source UUID is its identity. Keeping existing files avoids overwriting edits in the vault. Pro provides a comparison for review, but version 1 has no update merge. Removing the UUID property can cause a record to be treated as new; an occupied path can still block it.
+The source UUID is its identity. Keeping existing files avoids overwriting edits in the vault. Removing the UUID property can cause a record to be treated as new; an occupied path can still block it.
 
 ## Payment, account and network
 

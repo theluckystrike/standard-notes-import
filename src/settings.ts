@@ -3,6 +3,7 @@ import { sponsorsSettingItems } from './license/github-obsidian';
 import { PRO_UI, isPro } from './pro';
 import { object, safeFolder, type Rule } from './importer';
 import type StandardNotesImportPlugin from './main';
+import { helloSettingItems } from './hello/settings';
 
 export interface ImportSettings { destination: string; rules: Rule[] }
 export function normalizeSettings(value: unknown): ImportSettings {
@@ -28,6 +29,11 @@ function folderError(value: string): string | undefined {
 export class ImportSettingTab extends PluginSettingTab {
  constructor(app: ConstructorParameters<typeof PluginSettingTab>[0], public plugin: StandardNotesImportPlugin) { super(app, plugin); }
  getSettingDefinitions(): SettingDefinitionItem[] {
+  // The product rows, then the "More from NoteMods" card (packages/hello).
+  return [...this.productSettingDefinitions(), ...helloSettingItems()];
+ }
+
+ productSettingDefinitions(): SettingDefinitionItem[] {
   return [
    { name: 'Destination folder', desc: 'Default folder for new notes.', control: { type: 'text', key: 'destination', defaultValue: 'Standard Notes', validate: (v: string) => folderError(v) } },
    ...(this.plugin.pro ? sponsorsSettingItems(this.plugin.pro, PRO_UI) : []),

@@ -5,6 +5,8 @@ import { bindPro, isPro, resetPro, SPONSORS } from './pro';
 import { object, planImport, safeFolder, tagValue, type Existing, type ImportPlan, type PlannedNote, type Rule, type SourceNote } from './importer';
 import { ImportModal, ReportModal } from './modals';
 import { ImportSettingTab, normalizeSettings, type ImportSettings } from './settings';
+import { setupHello } from './hello/index';
+import WHATS_NEW from './whats-new.json';
 
 export function renderNote(note: SourceNote): string {
  const properties = {
@@ -42,6 +44,8 @@ export default class StandardNotesImportPlugin extends Plugin {
  private modals = new Set<ImportModal | ReportModal>();
 
  async onload(): Promise<void> {
+  // First: "What's new" reads its state before the settings load (packages/hello). It does not wait.
+  setupHello(this, WHATS_NEW);
   this.unloaded = false;
   const saved: unknown = await this.loadData();
   if (this.unloaded) return;
