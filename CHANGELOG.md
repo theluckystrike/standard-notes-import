@@ -1,5 +1,11 @@
 # standard-notes-import
 
+## 1.2.1
+
+### Patch Changes
+
+- e98dad2: Preview changes (pro) and Save rules now show how to get Pro, with a Sponsor on GitHub button, when you select them. Nothing is read or saved until Pro is on.
+
 ## 1.2.0
 
 ### Minor Changes

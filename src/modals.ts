@@ -1,5 +1,5 @@
 import { Modal, Setting } from 'obsidian';
-import { isPro } from './pro';
+import { isPro, PRO_PREVIEW, proNotice } from './pro';
 import type StandardNotesImportPlugin from './main';
 import type { ImportPlan } from './importer';
 
@@ -31,11 +31,13 @@ export class ImportModal extends Modal {
    try { this.plugin.showReport(await this.plugin.inspectBackup(await this.plugin.readBackup(this.path), this.folder)); }
    catch (e) { status.setText(e instanceof Error ? e.message : String(e)); }
    finally { b.setDisabled(false); }
-  })).addButton((b) => b.setButtonText('Preview changes (pro)').setDisabled(!this.path || !isPro()).onClick(async () => {
+  })).addButton((b) => b.setButtonText('Preview changes (pro)').setDisabled(!this.path).onClick(async () => {
+   // A free user gets the shared Pro notice. No backup is read and no preview opens.
+   if (!isPro()) { proNotice(PRO_PREVIEW); return; }
    b.setDisabled(true);
    try { this.plugin.showReport(await this.plugin.inspectBackup(await this.plugin.readBackup(this.path), this.folder, true)); }
    catch (e) { status.setText(e instanceof Error ? e.message : String(e)); }
-   finally { b.setDisabled(!isPro()); }
+   finally { b.setDisabled(false); }
   }));
   new Setting(this.contentEl).setName('Create new notes').setDesc('The backup stays in place. Repeat imports skip source identifiers found in vault properties.').addButton((b) => {
    b.setButtonText('Import notes').setCta().setDisabled(!this.path).onClick(async () => {

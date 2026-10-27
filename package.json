@@ -1,7 +1,6 @@
 {
 	"name": "standard-notes-import",
-	"repository": {"type": "git", "url": "theluckystrike/standard-notes-import.git"},
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"private": true,
 	"description": "Import decrypted Standard Notes backups with tags and dates.",
 	"main": "main.js",

@@ -1,7 +1,7 @@
 import { Notice, Plugin, TFile, TFolder, normalizePath, parseYaml, stringifyYaml } from 'obsidian';
 import { createGitHubSponsors } from './license/github-obsidian';
 import type { SponsorsManager } from './license/index';
-import { bindPro, isPro, resetPro, SPONSORS } from './pro';
+import { bindPro, isPro, PRO_PREVIEW, PRO_RULES, proText, resetPro, SPONSORS } from './pro';
 import { object, planImport, safeFolder, tagValue, type Existing, type ImportPlan, type PlannedNote, type Rule, type SourceNote } from './importer';
 import { ImportModal, ReportModal } from './modals';
 import { ImportSettingTab, normalizeSettings, type ImportSettings } from './settings';
@@ -85,7 +85,7 @@ export default class StandardNotesImportPlugin extends Plugin {
  forgetModal(modal: ImportModal | ReportModal): void { this.modals.delete(modal); }
  async saveSettings(): Promise<void> { await this.saveData(this.settings); }
  async saveRules(rules: Rule[]): Promise<void> {
-  if (!isPro()) throw new Error('Saved tag rules need Pro. Sign in from the plugin settings.');
+  if (!isPro()) throw new Error(proText(PRO_RULES));
   const checked = rules.map((r) => ({ tag: r.tag.trim(), folder: safeFolder(r.folder) }));
   if (checked.some((r) => !r.tag)) throw new Error('A rule needs a source tag.');
   if (new Set(checked.map((r) => r.tag)).size !== checked.length) throw new Error('Use one rule for each source tag.');
@@ -100,7 +100,7 @@ export default class StandardNotesImportPlugin extends Plugin {
  }
  async inspectBackup(input: unknown, folder: string, preview = false): Promise<ImportPlan> {
   this.requireLoaded();
-  if (preview && !isPro()) throw new Error('The changed record preview needs Pro. Sign in from the plugin settings.');
+  if (preview && !isPro()) throw new Error(proText(PRO_PREVIEW));
   const existing: Existing[] = [];
   const files = this.app.vault.getFiles();
   for (const file of files) {

@@ -56,7 +56,7 @@ In the plugin settings, enter one rule per line, such as `work => Imported/Work`
 
 ### Preview changed records (Pro)
 
-Select "Preview changes (pro)" in the import dialog to compare source records with notes that have matching UUIDs. Expand a changed record to read the existing vault record and the new backup record. The comparison includes text, original title, source tags and source date strings. A local body edit can appear as a change.
+Select "Preview changes (pro)" in the import dialog to compare source records with notes that have matching UUIDs. Expand a changed record to read both records. The comparison includes text, original title, source tags and source date strings. A local body edit can appear as a change. Without Pro, this button and "Save rules" show a Sponsor on GitHub notice.
 
 The preview writes no notes. Version 1 does not merge changed text, replace existing notes or move them to a new rule folder. Use the preview for manual review.
 
@@ -92,7 +92,7 @@ No Linux app run, physical mobile device, live payment, live GitHub sign-in, enc
 
 ### Why does a repeat import skip my changed note?
 
-The source UUID is its identity. Keeping existing files avoids overwriting edits in the vault. Removing the UUID property can cause a record to be treated as new; an occupied path can still block it.
+The source UUID is its identity. Keeping existing files avoids overwriting edits in the vault. Without the UUID property, a record counts as new, but an occupied path can still block it.
 
 ## Payment, account and network
 

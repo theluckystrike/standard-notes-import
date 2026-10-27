@@ -1,6 +1,6 @@
 import { Notice, PluginSettingTab, type SettingDefinitionItem } from 'obsidian';
 import { sponsorsSettingItems } from './license/github-obsidian';
-import { PRO_UI, isPro } from './pro';
+import { PRO_RULES, PRO_UI, isPro, proNotice } from './pro';
 import { object, safeFolder, type Rule } from './importer';
 import type StandardNotesImportPlugin from './main';
 import { helloSettingItems } from './hello/settings';
@@ -40,7 +40,9 @@ export class ImportSettingTab extends PluginSettingTab {
    { name: 'Saved tag rules (Pro)', desc: 'Use one source tag => folder rule per line. Source tag names are case sensitive. The first matching rule selects the folder.', render: (setting) => {
     let text = this.plugin.settings.rules.map((r) => `${r.tag} => ${r.folder}`).join('\n');
     setting.addTextArea((t) => t.setValue(text).setDisabled(!isPro()).onChange((v) => { text = v; }));
-    setting.addButton((b) => b.setButtonText('Save rules').setDisabled(!isPro()).onClick(async () => {
+    setting.addButton((b) => b.setButtonText('Save rules').onClick(async () => {
+     // A free user gets the shared Pro notice. No rule is saved. The text area stays read-only without Pro.
+     if (!isPro()) { proNotice(PRO_RULES); return; }
      try { await this.plugin.saveRules(parseRules(text)); new Notice('Saved tag rules.'); }
      catch (e) { new Notice(e instanceof Error ? e.message : String(e)); }
     }));
