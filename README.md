@@ -98,6 +98,8 @@ The source UUID is its identity. Keeping existing files avoids overwriting edits
 
 The core features are free. Pro features need a GitHub Sponsors sponsorship of theluckystrike: $5 a month or more, or $15 once. A total payment of $15 meets the payment requirement for Pro without further payment. Sign-in and the checks below still apply. Your notes stay readable and editable with or without Pro.
 
+[One payment turns on Pro in every NoteMods plugin](https://notemods.com/pro/).
+
 GitHub handles the payment. Sponsor at https://github.com/sponsors/theluckystrike?frequency=one-time&metadata_source=standard-notes-import. You need no account for the free features. Pro needs the GitHub account that sponsors.
 
 Until you select "Sign in with GitHub" in the settings, Standard Notes Import makes no network requests. Sign in uses the GitHub device flow. Standard Notes Import sends its public client ID and the scope `read:user` to `https://github.com/login/device/code` and shows you a code. While you enter the code at https://github.com/login/device, it asks `https://github.com/login/oauth/access_token` every few seconds to check the sign-in status. The scope permits profile reads only. GitHub needs this access to show the sponsorship tier. It grants no repository scope and no write access.
@@ -108,7 +110,7 @@ After a successful check, Pro can work offline for up to 14 days. Sign out or a 
 
 ## Support
 
-Use the published repository's issue tracker for bug reports. Include the Obsidian version, backup version and report message. If you share a sample, remove private text and use invented UUIDs and titles. Do not include tokens, encryption keys or a complete private backup. The publisher is theluckystrike at notemods.com.
+Use the repository's issue tracker for bug reports. Include the Obsidian version, backup version and report message. If you share a sample, remove private text and use invented UUIDs and titles. Do not include tokens, encryption keys or a complete private backup.
 
 ## Community
 
