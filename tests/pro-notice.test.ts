@@ -9,7 +9,7 @@ import manifest from '../manifest.json';
 
 // A free user can select "Preview changes (pro)" in the import window and "Save rules" in the settings. The select
 // shows the shared Pro notice with the "Sponsor on GitHub" button. No preview opens, no backup is read, no rule is saved.
-const PITCH = 'Sponsor on GitHub, then sign in from the plugin settings.';
+const PITCH = 'One payment turns on Pro in every NoteMods plugin. Sponsor on GitHub, then sign in from the plugin settings.';
 const PREVIEW_LEAD = 'The changed record preview needs Pro.';
 const RULES_LEAD = 'Saved tag rules need Pro.';
 const BACKUP = JSON.stringify({ items: [{ uuid: 'n1', content_type: 'Note', content: { title: 'Hello', text: 'Hello', references: [] } }] });

@@ -1,9 +1,9 @@
 {
 	"id": "standard-notes-import",
 	"name": "Standard Notes Import",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"changes": [
-		"Preview changes (pro) and Save rules now show how to get Pro, with a Sponsor on GitHub button, when you select them. Nothing is read or saved until Pro is on."
+		"The Pro notice of Standard Notes Import now says that one payment turns on Pro in every NoteMods plugin."
 	],
 	"tip": "Keep the original .txt backup name; renaming it to .json is not needed.",
 	"thanks": "Hi, I am Michael, a solo developer in Poland. Standard Notes Import is one of over 100 small plugins that I make. Thank you for moving your notes into Obsidian with it.",
