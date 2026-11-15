@@ -1,5 +1,11 @@
 # standard-notes-import
 
+## 1.2.3
+
+### Patch Changes
+
+- The Sponsor button now opens the NoteMods one-time tier.
+
 ## 1.2.2
 
 ### Patch Changes
